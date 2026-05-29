@@ -11,7 +11,6 @@
       <nav class="nav">
         <RouterLink to="/">首页</RouterLink>
         <RouterLink to="/recipes">菜谱</RouterLink>
-        <RouterLink to="/categories">分类</RouterLink>
         <RouterLink class="nav-compose" to="/publish">发布菜谱</RouterLink>
         <RouterLink to="/profile">我的收藏</RouterLink>
         <RouterLink v-if="userStore.isAdmin" to="/admin">后台管理</RouterLink>
