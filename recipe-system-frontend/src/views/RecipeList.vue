@@ -18,7 +18,7 @@
   </section>
 
   <section class="section">
-    <div class="category-tabs">
+    <div ref="categoryTabsRef" class="category-tabs">
       <button :class="{ active: !filters.categoryId }" @click="selectCategory(null)">全部</button>
       <button
         v-for="item in categories"
@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, watch } from "vue";
+import { nextTick, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import RecipeCard from "../components/RecipeCard.vue";
 import { categoryApi, recipeApi } from "../api";
@@ -56,6 +56,7 @@ const categories = ref([]);
 const recipes = ref([]);
 const total = ref(0);
 const loading = ref(false);
+const categoryTabsRef = ref(null);
 const filters = reactive({
   page: 1,
   pageSize: 9,
@@ -88,9 +89,23 @@ function selectCategory(categoryId) {
   filters.categoryId = categoryId;
 }
 
+function scrollToCategoryTabs() {
+  if (categoryTabsRef.value) {
+    categoryTabsRef.value.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
 watch(() => filters.categoryId, () => {
   filters.page = 1;
   loadRecipes();
+});
+
+watch(() => route.query.categoryId, (newCategoryId) => {
+  if (newCategoryId !== undefined) {
+    filters.categoryId = newCategoryId ? Number(newCategoryId) : null;
+    filters.page = 1;
+    nextTick(() => scrollToCategoryTabs());
+  }
 });
 
 onMounted(async () => {
@@ -98,5 +113,8 @@ onMounted(async () => {
   filters.keyword = route.query.keyword || "";
   filters.categoryId = route.query.categoryId ? Number(route.query.categoryId) : null;
   loadRecipes();
+  if (route.query.categoryId) {
+    nextTick(() => scrollToCategoryTabs());
+  }
 });
 </script>
