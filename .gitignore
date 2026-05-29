@@ -23,5 +23,8 @@ Thumbs.db
 # Maven (installed under tools/)
 tools/
 
+# WeChat images
+微信图片_*.jpg
+
 # Temp files
 temp/
