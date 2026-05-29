@@ -17,7 +17,7 @@
   </section>
 
   <section class="category-dock">
-    <button v-for="(item, index) in displayCategories" :key="item.id || item.name" @click="goCategory(item.id)">
+    <button v-for="(item, index) in displayCategories" :key="item.id || item.name" @click="goCategory(item)">
       <span :style="{ background: categoryColors[index % categoryColors.length] }">{{ categoryIcon(item.name) }}</span>
       <strong>{{ item.name }}</strong>
     </button>
@@ -132,8 +132,8 @@ function searchWord(word) {
   goSearch();
 }
 
-function goCategory(categoryId) {
-  router.push({ path: "/recipes", query: { categoryId: categoryId || undefined } });
+function goCategory(category) {
+  router.push({ path: "/recipes", query: { category: category?.name || undefined } });
 }
 
 function shuffleHot() {

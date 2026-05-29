@@ -19,12 +19,12 @@
 
   <section class="section">
     <div ref="categoryTabsRef" class="category-tabs">
-      <button :class="{ active: !filters.categoryId }" @click="selectCategory(null)">全部</button>
+      <button :class="{ active: activeCategory === '全部' }" @click="selectCategory('全部')">全部</button>
       <button
         v-for="item in categories"
         :key="item.id"
-        :class="{ active: filters.categoryId === item.id }"
-        @click="selectCategory(item.id)"
+        :class="{ active: activeCategory === item.name }"
+        @click="selectCategory(item.name)"
       >
         {{ item.name }}
       </button>
@@ -47,16 +47,18 @@
 
 <script setup>
 import { nextTick, onMounted, reactive, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import RecipeCard from "../components/RecipeCard.vue";
 import { categoryApi, recipeApi } from "../api";
 
 const route = useRoute();
+const router = useRouter();
 const categories = ref([]);
 const recipes = ref([]);
 const total = ref(0);
 const loading = ref(false);
 const categoryTabsRef = ref(null);
+const activeCategory = ref("全部");
 const filters = reactive({
   page: 1,
   pageSize: 9,
@@ -85,8 +87,46 @@ function changePage(page) {
   loadRecipes();
 }
 
-function selectCategory(categoryId) {
-  filters.categoryId = categoryId;
+function categoryIdByName(categoryName) {
+  if (!categoryName || categoryName === "全部") return null;
+  return categories.value.find((item) => item.name === categoryName)?.id || null;
+}
+
+function syncCategoryFromQuery() {
+  const queryCategory = Array.isArray(route.query.category) ? route.query.category[0] : route.query.category;
+  const queryCategoryId = Array.isArray(route.query.categoryId) ? route.query.categoryId[0] : route.query.categoryId;
+
+  if (queryCategory) {
+    const matchedCategory = categories.value.find((item) => item.name === queryCategory);
+    activeCategory.value = matchedCategory?.name || "全部";
+    filters.categoryId = matchedCategory?.id || null;
+    return;
+  }
+
+  if (queryCategoryId) {
+    const categoryId = Number(queryCategoryId);
+    const matchedCategory = categories.value.find((item) => item.id === categoryId);
+    activeCategory.value = matchedCategory?.name || "全部";
+    filters.categoryId = matchedCategory?.id || null;
+    return;
+  }
+
+  activeCategory.value = "全部";
+  filters.categoryId = null;
+}
+
+function selectCategory(categoryName) {
+  const nextCategory = categoryName || "全部";
+  activeCategory.value = nextCategory;
+  filters.categoryId = categoryIdByName(nextCategory);
+  router.push({
+    path: "/recipes",
+    query: {
+      ...route.query,
+      category: nextCategory === "全部" ? undefined : nextCategory,
+      categoryId: undefined,
+    },
+  });
 }
 
 function scrollToCategoryTabs() {
@@ -100,20 +140,21 @@ watch(() => filters.categoryId, () => {
   loadRecipes();
 });
 
-watch(() => route.query.categoryId, (newCategoryId) => {
-  if (newCategoryId !== undefined) {
-    filters.categoryId = newCategoryId ? Number(newCategoryId) : null;
+watch(
+  () => [route.query.category, route.query.categoryId],
+  () => {
+    syncCategoryFromQuery();
     filters.page = 1;
     nextTick(() => scrollToCategoryTabs());
-  }
-});
+  },
+);
 
 onMounted(async () => {
   categories.value = await categoryApi.list();
   filters.keyword = route.query.keyword || "";
-  filters.categoryId = route.query.categoryId ? Number(route.query.categoryId) : null;
+  syncCategoryFromQuery();
   loadRecipes();
-  if (route.query.categoryId) {
+  if (route.query.category || route.query.categoryId) {
     nextTick(() => scrollToCategoryTabs());
   }
 });
