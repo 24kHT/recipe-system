@@ -30,6 +30,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result<Void> handleException(Exception ex) {
         ex.printStackTrace();
-        return Result.fail(500, "服务器错误");
+        return Result.fail(500, "服务器错误: " + ex.getClass().getSimpleName() + " - " + ex.getMessage());
     }
 }

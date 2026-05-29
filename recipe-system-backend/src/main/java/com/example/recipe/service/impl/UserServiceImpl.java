@@ -55,8 +55,7 @@ public class UserServiceImpl implements UserService {
     public LoginVO login(LoginRequest request) {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getUsername, request.getUsername())
-                .eq(User::getDeleted, 0)
-                .last("LIMIT 1"));
+                .eq(User::getDeleted, 0));
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw BusinessException.badRequest("用户名或密码错误");
         }
