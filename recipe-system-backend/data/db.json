@@ -1,0 +1,446 @@
+{
+  "counters": {
+    "user": 4,
+    "category": 10,
+    "recipe": 5,
+    "ingredient": 9,
+    "step": 11,
+    "favorite": 3,
+    "comment": 4
+  },
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "6e5ff355b379e4fd5809bda5:6a0c933637133e112f14ff5cfa52726ac6403439601b2e333ff09bbed93e91bd",
+      "nickname": "系统管理员",
+      "avatar": "",
+      "email": "admin@example.com",
+      "phone": "",
+      "bio": "负责内容审核与分类维护",
+      "role": "ADMIN",
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 2,
+      "username": "demo",
+      "password": "a8dc91835be137bfb1de22f6:05e2fa1cd87a369a7ade4e0245d3e7333bf9977f853edaee8232077feb447f9b",
+      "nickname": "美食爱好者",
+      "avatar": "",
+      "email": "demo@example.com",
+      "phone": "13800000000",
+      "bio": "喜欢记录家常菜",
+      "role": "USER",
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 3,
+      "username": "583",
+      "password": "be0976db12530c004562452b:eafe19eb5c35c7b6767c51c87dc3993d736e818c992ee8df5ab1ed6a4a520786",
+      "nickname": "453453",
+      "avatar": "",
+      "email": "45354",
+      "phone": "4534",
+      "bio": "",
+      "role": "USER",
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-27T09:32:22.406Z",
+      "updateTime": "2026-05-27T09:32:22.406Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "家常菜",
+      "icon": "home-food",
+      "sort": 1,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 2,
+      "name": "早餐",
+      "icon": "breakfast",
+      "sort": 2,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 3,
+      "name": "午餐",
+      "icon": "lunch",
+      "sort": 3,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 4,
+      "name": "晚餐",
+      "icon": "dinner",
+      "sort": 4,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 5,
+      "name": "甜品",
+      "icon": "dessert",
+      "sort": 5,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 6,
+      "name": "汤类",
+      "icon": "soup",
+      "sort": 6,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 7,
+      "name": "川菜",
+      "icon": "sichuan",
+      "sort": 7,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 8,
+      "name": "粤菜",
+      "icon": "cantonese",
+      "sort": 8,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 9,
+      "name": "减脂餐",
+      "icon": "fitness",
+      "sort": 9,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "userId": 2,
+      "categoryId": 1,
+      "title": "番茄炒蛋",
+      "coverImage": "",
+      "description": "酸甜开胃的经典家常菜，十分钟就能完成。",
+      "difficulty": "简单",
+      "cookingTime": 10,
+      "tips": "番茄先炒出汁，鸡蛋最后回锅更嫩。",
+      "viewCount": 29,
+      "favoriteCount": 1,
+      "commentCount": 1,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "categoryId": 6,
+      "title": "菌菇鸡汤",
+      "coverImage": "",
+      "description": "清淡鲜美，适合晚餐和周末备餐。",
+      "difficulty": "中等",
+      "cookingTime": 60,
+      "tips": "小火慢炖，最后再调盐。",
+      "viewCount": 17,
+      "favoriteCount": 0,
+      "commentCount": 1,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "categoryId": 9,
+      "title": "鸡胸肉沙拉",
+      "coverImage": "",
+      "description": "高蛋白低脂，搭配蔬菜和酸奶酱。",
+      "difficulty": "简单",
+      "cookingTime": 18,
+      "tips": "鸡胸肉提前腌制更入味。",
+      "viewCount": 45,
+      "favoriteCount": 1,
+      "commentCount": 1,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 4,
+      "userId": 3,
+      "categoryId": 2,
+      "title": "45345",
+      "coverImage": "",
+      "description": "45236453453543",
+      "difficulty": "简单",
+      "cookingTime": 30,
+      "tips": "4345",
+      "viewCount": 3,
+      "favoriteCount": 0,
+      "commentCount": 0,
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-27T09:32:46.144Z",
+      "updateTime": "2026-05-27T09:32:46.144Z"
+    }
+  ],
+  "ingredients": [
+    {
+      "id": 1,
+      "recipeId": 1,
+      "name": "番茄",
+      "amount": "2个",
+      "sort": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 2,
+      "recipeId": 1,
+      "name": "鸡蛋",
+      "amount": "3个",
+      "sort": 2,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 3,
+      "recipeId": 1,
+      "name": "盐",
+      "amount": "适量",
+      "sort": 3,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 4,
+      "recipeId": 2,
+      "name": "鸡腿",
+      "amount": "2只",
+      "sort": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 5,
+      "recipeId": 2,
+      "name": "香菇",
+      "amount": "6朵",
+      "sort": 2,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 6,
+      "recipeId": 3,
+      "name": "鸡胸肉",
+      "amount": "200g",
+      "sort": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 7,
+      "recipeId": 3,
+      "name": "生菜",
+      "amount": "1份",
+      "sort": 2,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 8,
+      "recipeId": 4,
+      "name": "4534534",
+      "amount": "",
+      "sort": 1,
+      "deleted": 0,
+      "createTime": "2026-05-27T09:32:46.144Z",
+      "updateTime": "2026-05-27T09:32:46.144Z"
+    }
+  ],
+  "steps": [
+    {
+      "id": 1,
+      "recipeId": 1,
+      "stepNo": 1,
+      "content": "番茄切块，鸡蛋打散。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 2,
+      "recipeId": 1,
+      "stepNo": 2,
+      "content": "热锅炒鸡蛋至凝固盛出。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 3,
+      "recipeId": 1,
+      "stepNo": 3,
+      "content": "炒番茄出汁后倒回鸡蛋，调味出锅。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 4,
+      "recipeId": 2,
+      "stepNo": 1,
+      "content": "鸡腿焯水，菌菇洗净。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 5,
+      "recipeId": 2,
+      "stepNo": 2,
+      "content": "加水小火炖煮 50 分钟。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 6,
+      "recipeId": 2,
+      "stepNo": 3,
+      "content": "加入菌菇再煮 10 分钟，调盐。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 7,
+      "recipeId": 3,
+      "stepNo": 1,
+      "content": "鸡胸肉煎熟切片。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 8,
+      "recipeId": 3,
+      "stepNo": 2,
+      "content": "蔬菜洗净沥干，搭配酱汁装盘。",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 10,
+      "recipeId": 4,
+      "stepNo": 1,
+      "content": "",
+      "image": "",
+      "deleted": 0,
+      "createTime": "2026-05-27T09:32:46.144Z",
+      "updateTime": "2026-05-27T09:32:46.144Z"
+    }
+  ],
+  "favorites": [
+    {
+      "id": 1,
+      "userId": 2,
+      "recipeId": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 2,
+      "userId": 3,
+      "recipeId": 3,
+      "deleted": 0,
+      "createTime": "2026-05-27T09:51:06.451Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "userId": 2,
+      "recipeId": 1,
+      "content": "步骤很清楚，适合新手。",
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "recipeId": 2,
+      "content": "汤很鲜，适合周末。",
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-25T09:36:31.044Z",
+      "updateTime": "2026-05-25T09:36:31.044Z"
+    },
+    {
+      "id": 3,
+      "userId": 3,
+      "recipeId": 3,
+      "content": "难吃",
+      "status": 1,
+      "deleted": 0,
+      "createTime": "2026-05-27T09:51:01.233Z",
+      "updateTime": "2026-05-27T09:51:01.233Z"
+    }
+  ]
+}
