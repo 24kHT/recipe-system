@@ -23,7 +23,11 @@
       </div>
     </header>
     <main class="page">
-      <RouterView />
+      <RouterView v-slot="{ Component, route }">
+        <keep-alive :include="cachedViews">
+          <component :is="Component" :key="route.name" />
+        </keep-alive>
+      </RouterView>
     </main>
     <footer class="site-footer">
       <RouterLink class="footer-brand" to="/">
@@ -50,6 +54,8 @@ import { useUserStore } from "./store/user";
 
 const router = useRouter();
 const userStore = useUserStore();
+
+const cachedViews = ["Home", "RecipeList", "FridgeFinder"];
 
 function logout() {
   userStore.logout();

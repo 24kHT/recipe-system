@@ -70,6 +70,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: "Home" });
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import RecipeCard from "../components/RecipeCard.vue";

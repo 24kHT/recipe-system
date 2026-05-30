@@ -46,6 +46,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: "RecipeList" });
 import { nextTick, onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import RecipeCard from "../components/RecipeCard.vue";

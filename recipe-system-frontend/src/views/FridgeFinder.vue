@@ -139,6 +139,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: "FridgeFinder" });
 import { computed, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { recipeApi } from "../api";
