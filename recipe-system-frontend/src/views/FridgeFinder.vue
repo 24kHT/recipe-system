@@ -21,12 +21,27 @@
           </div>
           <el-button text type="primary" :disabled="selectedIngredients.length === 0" @click="clearSelected">清空</el-button>
         </div>
+        <h3 class="ingredient-group-title">主料</h3>
         <div class="ingredient-grid">
           <button
-            v-for="item in ingredientOptions"
+            v-for="item in mainIngredientOptions"
             :key="item.name"
             type="button"
             class="ingredient-chip"
+            :class="{ active: isSelected(item.name) }"
+            @click="toggleIngredient(item, $event)"
+          >
+            <span class="ingredient-icon">{{ item.icon }}</span>
+            <strong>{{ item.name }}</strong>
+          </button>
+        </div>
+        <h3 class="ingredient-group-title">调味料</h3>
+        <div class="ingredient-grid">
+          <button
+            v-for="item in seasoningIngredientOptions"
+            :key="item.name"
+            type="button"
+            class="ingredient-chip seasoning-chip"
             :class="{ active: isSelected(item.name) }"
             @click="toggleIngredient(item, $event)"
           >
@@ -99,8 +114,10 @@
               <span class="tag">{{ item.cookTime || "时间灵活" }}</span>
               <span class="tag accent-tag">{{ matchLabel(item.matchPercent) }}</span>
             </div>
-            <p><strong>已有食材：</strong>{{ item.matchedIngredients.join("、") || "无" }}</p>
-            <p><strong>缺少食材：</strong>{{ item.missingIngredients.length ? item.missingIngredients.join("、") : "无" }}</p>
+            <p><strong>已有主料：</strong>{{ item.matchedMainIngredients.join("、") || "无" }}</p>
+            <p><strong>已有调味料：</strong>{{ item.matchedSeasonings.join("、") || "无" }}</p>
+            <p><strong>缺少主料：</strong>{{ item.missingMainIngredients.length ? item.missingMainIngredients.join("、") : "无" }}</p>
+            <p><strong>缺少调味料：</strong>{{ item.missingSeasonings.length ? item.missingSeasonings.join("、") : "无" }}</p>
           </div>
         </RouterLink>
       </div>
@@ -126,7 +143,7 @@ import { computed, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { recipeApi } from "../api";
 
-const ingredientOptions = [
+const mainIngredientOptions = [
   { name: "包菜", icon: "🥬" },
   { name: "午餐肉", icon: "🥫" },
   { name: "土豆", icon: "🥔" },
@@ -158,13 +175,29 @@ const ingredientOptions = [
   { name: "黄瓜", icon: "🥒" },
 ];
 
+const seasoningIngredientOptions = [
+  { name: "盐", icon: "🧂" },
+  { name: "生抽", icon: "🫗" },
+  { name: "糖", icon: "🍬" },
+  { name: "葱花", icon: "🧅" },
+  { name: "香菜", icon: "🌿" },
+  { name: "清水", icon: "💧" },
+  { name: "黑胡椒", icon: "🌶️" },
+  { name: "柠檬汁", icon: "🍋" },
+  { name: "牛奶", icon: "🥛" },
+  { name: "蜂蜜", icon: "🍯" },
+];
+
+const ingredientOptions = [...mainIngredientOptions, ...seasoningIngredientOptions];
+const seasoningNames = new Set(seasoningIngredientOptions.map((item) => item.name));
+
 const fallbackRecipes = [
   {
     id: 1,
     name: "番茄炒蛋",
     category: "家常菜",
     coverImage: "",
-    requiredIngredients: ["番茄", "鸡蛋"],
+    requiredIngredients: ["番茄", "鸡蛋", "盐", "生抽", "糖", "葱花"],
     cookTime: "15分钟",
     difficulty: "简单",
   },
@@ -173,7 +206,7 @@ const fallbackRecipes = [
     name: "土豆炖牛肉",
     category: "午餐",
     coverImage: "",
-    requiredIngredients: ["土豆", "牛肉", "胡萝卜", "洋葱"],
+    requiredIngredients: ["土豆", "牛肉", "胡萝卜", "洋葱", "盐", "生抽", "糖", "葱花", "香菜"],
     cookTime: "45分钟",
     difficulty: "中等",
   },
@@ -182,7 +215,7 @@ const fallbackRecipes = [
     name: "白菜豆腐汤",
     category: "汤类",
     coverImage: "",
-    requiredIngredients: ["白菜", "豆腐", "菌菇"],
+    requiredIngredients: ["白菜", "豆腐", "菌菇", "盐", "生抽", "糖", "清水", "葱花", "香菜"],
     cookTime: "25分钟",
     difficulty: "简单",
   },
@@ -317,14 +350,28 @@ function searchRecipes() {
   matches.value = recipes.value
     .map((recipe) => {
       const required = [...new Set(recipe.requiredIngredients || [])];
+      const mainRequired = required.filter((name) => !seasoningNames.has(name));
+      const seasonRequired = required.filter((name) => seasoningNames.has(name));
       const matchedIngredients = required.filter((name) => selected.has(name));
       const missingIngredients = required.filter((name) => !selected.has(name));
-      const matchPercent = required.length ? Math.round((matchedIngredients.length / required.length) * 100) : 0;
+      const matchedMainIngredients = matchedIngredients.filter((name) => !seasoningNames.has(name));
+      const matchedSeasonings = matchedIngredients.filter((name) => seasoningNames.has(name));
+      const missingMainIngredients = missingIngredients.filter((name) => !seasoningNames.has(name));
+      const missingSeasonings = missingIngredients.filter((name) => seasoningNames.has(name));
+      const matchedMain = mainRequired.filter((name) => selected.has(name));
+      const matchedSeason = seasonRequired.filter((name) => selected.has(name));
+      const mainWeight = mainRequired.length ? (matchedMain.length / mainRequired.length) * 0.7 : 0.35;
+      const seasonWeight = seasonRequired.length ? (matchedSeason.length / seasonRequired.length) * 0.3 : 0.15;
+      const matchPercent = required.length ? Math.round((mainWeight + seasonWeight) * 100) : 0;
       return {
         ...recipe,
         matchedIngredients,
         missingIngredients,
-        matchPercent,
+        matchedMainIngredients,
+        matchedSeasonings,
+        missingMainIngredients,
+        missingSeasonings,
+        matchPercent: Math.min(matchPercent, 100),
       };
     })
     .filter((recipe) => recipe.matchPercent > 0)
