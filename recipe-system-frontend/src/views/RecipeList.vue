@@ -62,7 +62,7 @@ const categoryTabsRef = ref(null);
 const activeCategory = ref("全部");
 const filters = reactive({
   page: 1,
-  pageSize: 9,
+  pageSize: 18,
   keyword: "",
   categoryId: null,
 });
