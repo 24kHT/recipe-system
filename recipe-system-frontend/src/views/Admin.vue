@@ -31,8 +31,13 @@
           <el-table-column prop="title" label="菜谱" />
           <el-table-column prop="categoryName" label="分类" width="120" />
           <el-table-column prop="authorName" label="作者" width="140" />
-          <el-table-column label="状态" width="100">
-            <template #default="{ row }">{{ row.status === 1 ? "上架" : "下架" }}</template>
+          <el-table-column label="状态" width="110">
+            <template #default="{ row }">
+              <span :class="['recipe-status-badge', row.status === 1 ? 'is-online' : 'is-offline']">
+                {{ row.status === 1 ? "上架" : "下架" }}
+                <span class="recipe-status-icon" aria-hidden="true">{{ row.status === 1 ? "✓" : "×" }}</span>
+              </span>
+            </template>
           </el-table-column>
           <el-table-column label="操作" width="170">
             <template #default="{ row }">

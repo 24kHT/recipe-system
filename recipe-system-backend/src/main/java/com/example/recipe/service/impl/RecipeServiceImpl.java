@@ -240,6 +240,10 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeVO vo = RecipeVO.from(recipe);
         User author = userMapper.selectById(recipe.getUserId());
         Category category = categoryMapper.selectById(recipe.getCategoryId());
+        vo.setIngredients(ingredientMapper.selectList(new LambdaQueryWrapper<RecipeIngredient>()
+                .eq(RecipeIngredient::getRecipeId, recipe.getId())
+                .eq(RecipeIngredient::getDeleted, 0)
+                .orderByAsc(RecipeIngredient::getSort)));
         vo.setAuthorName(author == null ? "未知用户" : author.getNickname());
         vo.setCategoryName(category == null ? "未分类" : category.getName());
         Long userId = UserContext.userId();

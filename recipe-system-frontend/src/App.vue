@@ -4,13 +4,14 @@
       <RouterLink class="brand" to="/">
         <span class="brand-mark">食</span>
         <span>
-          <strong>食光菜谱</strong>
+          <strong>微菜谱</strong>
           <small>分享美味 · 记录生活</small>
         </span>
       </RouterLink>
       <nav class="nav">
         <RouterLink to="/">首页</RouterLink>
         <RouterLink to="/recipes">菜谱</RouterLink>
+        <RouterLink to="/fridge">冰箱寻菜</RouterLink>
         <RouterLink class="nav-compose" to="/publish">发布菜谱</RouterLink>
         <RouterLink to="/profile">我的收藏</RouterLink>
         <RouterLink v-if="userStore.isAdmin" to="/admin">后台管理</RouterLink>
@@ -28,11 +29,11 @@
       <RouterLink class="footer-brand" to="/">
         <span class="brand-mark">食</span>
         <span>
-          <strong>食光菜谱</strong>
+          <strong>微菜谱</strong>
           <small>分享美味 · 记录生活</small>
         </span>
       </RouterLink>
-      <p>食光菜谱致力于打造温暖有爱的美食社区，分享菜谱、交流心得、发现生活中的美好滋味。</p>
+      <p>微菜谱致力于打造温暖有爱的美食社区，分享菜谱、交流心得、发现生活中的美好滋味。</p>
       <div class="footer-links">
         <span>关于我们</span>
         <span>帮助中心</span>

@@ -5,6 +5,7 @@ import { useUserStore } from "../store/user";
 const routes = [
   { path: "/", component: () => import("../views/Home.vue") },
   { path: "/recipes", component: () => import("../views/RecipeList.vue") },
+  { path: "/fridge", component: () => import("../views/FridgeFinder.vue") },
   { path: "/recipe/:id", component: () => import("../views/RecipeDetail.vue") },
   { path: "/login", component: () => import("../views/Login.vue") },
   { path: "/register", component: () => import("../views/Register.vue") },
