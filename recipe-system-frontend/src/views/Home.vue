@@ -92,6 +92,7 @@ const fallbackCategories = [
   { id: null, name: "减脂餐" },
   { id: null, name: "川菜" },
 ];
+const seedCategoryOrder = ["家常菜", "早餐", "午餐", "晚餐", "甜品", "汤类", "减脂餐", "川菜"];
 const categoryColors = [
   "linear-gradient(135deg, #ff7a3d, #ff4b1f)",
   "linear-gradient(135deg, #ffbb19, #ff9100)",
@@ -103,7 +104,13 @@ const categoryColors = [
   "linear-gradient(135deg, #ff6b5d, #ff3f35)",
 ];
 
-const displayCategories = computed(() => (categories.value.length ? categories.value : fallbackCategories).slice(0, 8));
+const displayCategories = computed(() => {
+  const source = categories.value.length ? categories.value : fallbackCategories;
+  const byName = new Map(source.map((item) => [item.name, item]));
+  const ordered = seedCategoryOrder.map((name) => byName.get(name)).filter(Boolean);
+  const extras = source.filter((item) => !seedCategoryOrder.includes(item.name));
+  return [...ordered, ...extras].slice(0, 8);
+});
 const recommendedRecipes = computed(() => recipes.value.slice(0, 5));
 const latestRecipes = computed(() => recipes.value.slice(0, 6));
 const hotRecipes = computed(() => {

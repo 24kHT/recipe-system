@@ -21,6 +21,7 @@ public class Recipe {
     private String tips;
     private Integer viewCount;
     private Integer favoriteCount;
+    private Integer likeCount;
     private Integer commentCount;
     private Integer status;
     private LocalDateTime createTime;

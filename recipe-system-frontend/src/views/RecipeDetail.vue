@@ -17,6 +17,7 @@
         <span class="tag">{{ recipe.difficulty || "简单" }}</span>
         <span class="tag">{{ recipe.cookingTime || 0 }} 分钟</span>
         <span class="tag">浏览 {{ recipe.viewCount || 0 }}</span>
+        <span class="tag">点赞 {{ recipe.likeCount || 0 }}</span>
         <span class="tag">收藏 {{ recipe.favoriteCount || 0 }}</span>
       </div>
 

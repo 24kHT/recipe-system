@@ -44,6 +44,7 @@ public class RecipeServiceImpl implements RecipeService {
         fillRecipe(recipe, request);
         recipe.setViewCount(0);
         recipe.setFavoriteCount(0);
+        recipe.setLikeCount(0);
         recipe.setCommentCount(0);
         recipe.setStatus(1);
         recipe.setDeleted(0);

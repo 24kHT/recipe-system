@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `recipe` (
   `tips` TEXT DEFAULT NULL COMMENT '小贴士',
   `view_count` INT NOT NULL DEFAULT 0 COMMENT '浏览量',
   `favorite_count` INT NOT NULL DEFAULT 0 COMMENT '收藏数',
+  `like_count` INT NOT NULL DEFAULT 0 COMMENT '点赞数',
   `comment_count` INT NOT NULL DEFAULT 0 COMMENT '评论数',
   `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态：1正常，0下架',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

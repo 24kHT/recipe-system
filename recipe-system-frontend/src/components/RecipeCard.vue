@@ -15,6 +15,7 @@
       <div class="tag-row">
         <span class="tag">{{ recipe.categoryName || "家常菜" }}</span>
         <span class="tag">👁 {{ recipe.viewCount || 0 }}</span>
+        <span class="tag accent-tag">♥ {{ recipe.likeCount || 0 }}</span>
         <span class="tag accent-tag">♡ {{ recipe.favoriteCount || 0 }}</span>
       </div>
     </div>

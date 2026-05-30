@@ -7,6 +7,7 @@ import com.example.recipe.mapper.CategoryMapper;
 import com.example.recipe.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +19,13 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
     private final UserMapper userMapper;
     private final CategoryMapper categoryMapper;
+    private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Override
     public void run(String... args) {
+        ensureRecipeLikeCountColumn();
+
         if (userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getUsername, "admin")) == 0) {
             LocalDateTime now = LocalDateTime.now();
             User admin = new User();
@@ -49,6 +53,19 @@ public class DataInitializer implements CommandLineRunner {
                 category.setUpdateTime(now);
                 categoryMapper.insert(category);
             }
+        }
+    }
+
+    private void ensureRecipeLikeCountColumn() {
+        Integer count = jdbcTemplate.queryForObject("""
+                SELECT COUNT(*)
+                FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'recipe'
+                  AND COLUMN_NAME = 'like_count'
+                """, Integer.class);
+        if (count != null && count == 0) {
+            jdbcTemplate.execute("ALTER TABLE `recipe` ADD COLUMN `like_count` INT NOT NULL DEFAULT 0 COMMENT '点赞数' AFTER `favorite_count`");
         }
     }
 }

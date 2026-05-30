@@ -23,6 +23,7 @@ public class RecipeVO {
     private String tips;
     private Integer viewCount;
     private Integer favoriteCount;
+    private Integer likeCount;
     private Integer commentCount;
     private Integer status;
     private LocalDateTime createTime;
@@ -48,6 +49,7 @@ public class RecipeVO {
         vo.setTips(recipe.getTips());
         vo.setViewCount(recipe.getViewCount());
         vo.setFavoriteCount(recipe.getFavoriteCount());
+        vo.setLikeCount(recipe.getLikeCount());
         vo.setCommentCount(recipe.getCommentCount());
         vo.setStatus(recipe.getStatus());
         vo.setCreateTime(recipe.getCreateTime());
