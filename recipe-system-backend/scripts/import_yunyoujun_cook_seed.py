@@ -171,7 +171,7 @@ def amount_for(index: int, ingredient: str) -> str:
     return common.get(ingredient, "适量" if index > 2 else "1份")
 
 
-def build_steps(recipe: SourceRecipe, category: str) -> list[str]:
+def build_steps(recipe: SourceRecipe, category: str) -> tuple[list[str], list[tuple[str, str]]]:
     ingredients = "、".join(recipe.stuff[:5]) or "主要食材"
     method = recipe.methods[0] if recipe.methods else ""
     tool = recipe.tools[0] if recipe.tools else ""
@@ -179,14 +179,19 @@ def build_steps(recipe: SourceRecipe, category: str) -> list[str]:
     season = "加入盐、生抽、少许糖等基础调味料，按个人口味调整咸淡。"
     cook = f"使用{tool}{method}至食材成熟入味。" if tool or method else "热锅下油，按易熟程度依次放入食材翻炒至成熟。"
     finish = "出锅前尝味，撒上葱花或香菜点缀，趁热享用。"
+    extra: list[tuple[str, str]] = [("盐", "适量"), ("生抽", "1勺"), ("糖", "少许"), ("葱花", "适量"), ("香菜", "适量")]
     if category == "汤类":
         cook = "加入足量清水，先大火煮开，再转小火慢煮至汤色清亮、食材软嫩。"
+        extra = [("盐", "适量"), ("生抽", "1勺"), ("糖", "少许"), ("清水", "适量"), ("葱花", "适量"), ("香菜", "适量")]
     elif category == "甜品":
         cook = "按配方混合食材，小火加热或冷藏定型，保持口感细腻。"
         season = "根据甜度加入糖、牛奶或蜂蜜，搅拌均匀。"
+        finish = "冷藏或趁热装盘，可撒上糖粉或水果点缀，即可享用。"
+        extra = [("糖", "适量"), ("牛奶", "适量"), ("蜂蜜", "适量")]
     elif category == "减脂餐":
         season = "用少油少盐方式调味，可加入黑胡椒、柠檬汁提升风味。"
-    return [prep, season, cook, finish]
+        extra = [("黑胡椒", "适量"), ("柠檬汁", "少许"), ("葱花", "适量"), ("香菜", "适量")]
+    return [prep, season, cook, finish], extra
 
 
 def cooking_time(recipe: SourceRecipe, category: str) -> int:
@@ -219,9 +224,13 @@ def make_seed_recipes(source: list[SourceRecipe]) -> list[SeedRecipe]:
     seeds: list[SeedRecipe] = []
     for index, (item, category) in enumerate(choose_recipes(source), start=1):
         author = DEFAULT_AUTHOR_NAMES[(index - 1) % len(DEFAULT_AUTHOR_NAMES)]
-        ingredients = [(name, amount_for(i, name)) for i, name in enumerate(item.stuff[:8], start=1)]
-        if not ingredients:
-            ingredients = [("主要食材", "适量")]
+        main_ingredients = [(name, amount_for(i, name)) for i, name in enumerate(item.stuff[:8], start=1)]
+        if not main_ingredients:
+            main_ingredients = [("主要食材", "适量")]
+        steps, extra_ingredients = build_steps(item, category)
+        existing_names = {name for name, _ in main_ingredients}
+        merged_extra = [(name, amt) for name, amt in extra_ingredients if name not in existing_names]
+        ingredients = main_ingredients + merged_extra
         tags = "、".join(item.tags[:3])
         description = f"{item.name}是一道适合{category}场景的演示菜谱，食材以{'、'.join(item.stuff[:4]) or '常见食材'}为主。"
         if tags:
@@ -236,7 +245,7 @@ def make_seed_recipes(source: list[SourceRecipe]) -> list[SeedRecipe]:
                 cooking_time=cooking_time(item, category),
                 tips=f"{SEED_MARKER}; 原始条目来自 {SOURCE_NAME}; BV={item.bv or 'N/A'}",
                 ingredients=ingredients,
-                steps=build_steps(item, category),
+                steps=steps,
                 author=author,
                 view_count=random.randint(800, 48000),
                 favorite_count=random.randint(30, 2800),
@@ -261,12 +270,193 @@ def slug_color(category: str) -> tuple[str, str]:
     return colors.get(category, ("#ff6b35", "#ffb347"))
 
 
+INGREDIENT_EMOJI = {
+    "茄子": "🍆",
+    "土豆": "🥔",
+    "番茄": "🍅",
+    "鸡蛋": "🥚",
+    "鸡肉": "🍗",
+    "鸡翅": "🍗",
+    "鸡腿": "🍗",
+    "牛肉": "🥩",
+    "猪肉": "🥓",
+    "排骨": "🥩",
+    "虾仁": "🦐",
+    "虾": "🦐",
+    "米": "🍚",
+    "饭": "🍚",
+    "面包": "🍞",
+    "法棍": "🥖",
+    "汉堡": "🍔",
+    "方便面": "🍜",
+    "面食": "🍜",
+    "面": "🍜",
+    "豆腐": "⬜",
+    "包菜": "🥬",
+    "白菜": "🥬",
+    "花菜": "🥦",
+    "西葫芦": "🥒",
+    "黄瓜": "🥒",
+    "胡萝卜": "🥕",
+    "白萝卜": "🥕",
+    "洋葱": "🧅",
+    "菌菇": "🍄",
+    "芹菜": "🌿",
+    "莴笋": "🌿",
+    "香肠": "🌭",
+    "午餐肉": "🥓",
+    "腊肠": "🌭",
+    "骨头": "🍖",
+}
+
+
+def ingredient_emoji(name: str) -> str:
+    for key, icon in INGREDIENT_EMOJI.items():
+        if key in name:
+            return icon
+    return "•"
+
+
+def main_ingredients(recipe: SeedRecipe, limit: int = 4) -> list[str]:
+    names = [name for name, _ in recipe.ingredients if name and name != "主要食材"]
+    if not names:
+        names = [recipe.category]
+    return names[:limit]
+
+
+def split_title(title: str) -> list[str]:
+    compact = title.strip()
+    if len(compact) <= 12:
+        return [compact]
+    return [compact[:12], compact[12:22]]
+
+
+def title_svg(title: str) -> str:
+    lines = [html.escape(line) for line in split_title(title)]
+    if len(lines) == 1:
+        return f"""  <text x="480" y="286" text-anchor="middle" font-size="58" font-weight="900" fill="#502314"
+        font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif">{lines[0]}</text>"""
+    return f"""  <text x="480" y="260" text-anchor="middle" font-size="50" font-weight="900" fill="#502314"
+        font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif">{lines[0]}</text>
+  <text x="480" y="318" text-anchor="middle" font-size="44" font-weight="900" fill="#502314"
+        font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif">{lines[1]}</text>"""
+
+
+def ingredient_badges(recipe: SeedRecipe) -> str:
+    positions = [(212, 136), (748, 136), (206, 386), (754, 386)]
+    badges = []
+    for (x, y), name in zip(positions, main_ingredients(recipe)):
+        safe_name = html.escape(name[:4])
+        icon = html.escape(ingredient_emoji(name))
+        badges.append(f"""  <g>
+    <circle cx="{x}" cy="{y}" r="52" fill="#fffaf0" opacity=".94"/>
+    <text x="{x}" y="{y - 4}" text-anchor="middle" font-size="34"
+          font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, Microsoft YaHei">{icon}</text>
+    <text x="{x}" y="{y + 34}" text-anchor="middle" font-size="17" font-weight="800" fill="#7a3a14"
+          font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif">{safe_name}</text>
+  </g>""")
+    return "\n".join(badges)
+
+
+def recipe_kind(recipe: SeedRecipe) -> str:
+    title = recipe.title
+    ingredient_text = "、".join(main_ingredients(recipe, 8))
+    if any(key in title for key in ("焖饭", "炒饭", "米饭")) or "米" in ingredient_text:
+        return "rice"
+    if any(key in title for key in ("汤", "火锅", "锅底", "罗宋汤")):
+        return "soup"
+    if any(key in title for key in ("面", "泡面", "河粉", "粉")):
+        return "noodle"
+    if any(key in title for key in ("鸡蛋", "蛋", "蛋黄", "熔岩")):
+        return "egg"
+    if any(key in title for key in ("面包", "法棍", "汉堡", "包")):
+        return "bread"
+    if any(key in title for key in ("炸", "薯条", "薯片", "脆片", "烤")):
+        return "crispy"
+    return "plate"
+
+
+def cover_scene(recipe: SeedRecipe) -> str:
+    icons = [html.escape(ingredient_emoji(name)) for name in main_ingredients(recipe, 4)]
+    while len(icons) < 4:
+        icons.append("•")
+    kind = recipe_kind(recipe)
+    if kind == "rice":
+        return f"""  <ellipse cx="480" cy="336" rx="214" ry="78" fill="#7a3a14" opacity=".18"/>
+  <path d="M300 250 Q480 360 660 250 L612 400 Q480 458 348 400 Z" fill="#fff7e6" stroke="#7a3a14" stroke-width="8"/>
+  <ellipse cx="480" cy="250" rx="190" ry="72" fill="#fffdf5" stroke="#7a3a14" stroke-width="8"/>
+  <circle cx="420" cy="246" r="34" fill="#ffd43b"/>
+  <circle cx="487" cy="230" r="30" fill="#ff8787"/>
+  <circle cx="548" cy="260" r="28" fill="#69db7c"/>
+  <text x="390" y="242" font-size="42" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[0]}</text>
+  <text x="500" y="250" font-size="42" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[1]}</text>
+  <text x="454" y="292" font-size="40" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[2]}</text>"""
+    if kind == "soup":
+        return f"""  <path d="M390 138 C362 108 420 92 392 58" fill="none" stroke="#fff8dc" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+  <path d="M486 136 C454 104 520 90 490 58" fill="none" stroke="#fff8dc" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+  <path d="M580 138 C552 108 610 92 582 58" fill="none" stroke="#fff8dc" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+  <ellipse cx="480" cy="328" rx="226" ry="74" fill="#7a3a14" opacity=".18"/>
+  <path d="M286 232 H674 L630 406 Q480 462 330 406 Z" fill="#fff5de" stroke="#7a3a14" stroke-width="8"/>
+  <ellipse cx="480" cy="232" rx="200" ry="66" fill="#ffb347" stroke="#7a3a14" stroke-width="8"/>
+  <circle cx="406" cy="220" r="24" fill="#ff6b6b"/>
+  <circle cx="492" cy="238" r="22" fill="#51cf66"/>
+  <circle cx="558" cy="214" r="22" fill="#ffd43b"/>
+  <text x="376" y="236" font-size="40" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[0]}</text>
+  <text x="516" y="232" font-size="40" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[1]}</text>"""
+    if kind == "noodle":
+        return f"""  <ellipse cx="480" cy="336" rx="214" ry="78" fill="#7a3a14" opacity=".18"/>
+  <path d="M296 244 H664 L610 404 Q480 452 350 404 Z" fill="#fff7e6" stroke="#7a3a14" stroke-width="8"/>
+  <ellipse cx="480" cy="244" rx="192" ry="68" fill="#ffe8a3" stroke="#7a3a14" stroke-width="8"/>
+  <path d="M370 238 C424 212 438 270 492 240 C540 214 560 268 602 240" fill="none" stroke="#f08c00" stroke-width="12" stroke-linecap="round"/>
+  <path d="M392 276 C446 250 468 306 526 276" fill="none" stroke="#f08c00" stroke-width="12" stroke-linecap="round"/>
+  <text x="416" y="226" font-size="42" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[0]}</text>
+  <text x="540" y="284" font-size="40" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[1]}</text>"""
+    if kind == "egg":
+        return f"""  <ellipse cx="480" cy="346" rx="228" ry="74" fill="#7a3a14" opacity=".18"/>
+  <rect x="288" y="220" width="384" height="196" rx="56" fill="#45413c"/>
+  <rect x="312" y="244" width="336" height="148" rx="42" fill="#fff3bf"/>
+  <ellipse cx="480" cy="318" rx="126" ry="78" fill="#fffdf5"/>
+  <circle cx="480" cy="318" r="42" fill="#ffb703"/>
+  <text x="378" y="282" font-size="40" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[0]}</text>
+  <text x="556" y="288" font-size="38" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[1]}</text>"""
+    if kind == "bread":
+        return f"""  <ellipse cx="480" cy="348" rx="222" ry="70" fill="#7a3a14" opacity=".18"/>
+  <rect x="292" y="238" width="376" height="158" rx="44" fill="#8d5524"/>
+  <ellipse cx="402" cy="298" rx="86" ry="68" fill="#f4a261"/>
+  <ellipse cx="512" cy="292" rx="92" ry="72" fill="#f6bd60"/>
+  <ellipse cx="594" cy="318" rx="68" ry="50" fill="#e76f51"/>
+  <path d="M372 276 Q414 248 456 276" fill="none" stroke="#fff1c7" stroke-width="10" stroke-linecap="round"/>
+  <path d="M486 272 Q532 242 574 274" fill="none" stroke="#fff1c7" stroke-width="10" stroke-linecap="round"/>
+  <text x="448" y="334" font-size="38" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[0]}</text>
+  <text x="548" y="344" font-size="36" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[1]}</text>"""
+    if kind == "crispy":
+        return f"""  <ellipse cx="480" cy="352" rx="224" ry="70" fill="#7a3a14" opacity=".18"/>
+  <path d="M318 236 H642 L604 410 H356 Z" fill="#fff0d6" stroke="#7a3a14" stroke-width="8"/>
+  <path d="M352 204 H608 L642 236 H318 Z" fill="#ffe8a3" stroke="#7a3a14" stroke-width="8"/>
+  <rect x="392" y="246" width="34" height="128" rx="17" fill="#ff922b" transform="rotate(-12 409 310)"/>
+  <rect x="454" y="238" width="34" height="136" rx="17" fill="#ffd43b" transform="rotate(8 471 306)"/>
+  <rect x="520" y="248" width="34" height="120" rx="17" fill="#ff6b35" transform="rotate(16 537 308)"/>
+  <text x="394" y="308" font-size="44" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[0]}</text>
+  <text x="534" y="318" font-size="42" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[1]}</text>"""
+    return f"""  <ellipse cx="480" cy="348" rx="236" ry="76" fill="#7a3a14" opacity=".18"/>
+  <ellipse cx="480" cy="302" rx="224" ry="116" fill="#fff7e6" stroke="#7a3a14" stroke-width="8"/>
+  <ellipse cx="480" cy="302" rx="154" ry="72" fill="#ffe8a3"/>
+  <circle cx="404" cy="278" r="38" fill="#ff8787"/>
+  <circle cx="486" cy="326" r="36" fill="#69db7c"/>
+  <circle cx="560" cy="276" r="34" fill="#ffd43b"/>
+  <text x="382" y="296" font-size="44" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[0]}</text>
+  <text x="486" y="342" font-size="42" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[1]}</text>
+  <text x="552" y="292" font-size="40" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji">{icons[2]}</text>"""
+
+
 def write_cover_svgs(recipes: list[SeedRecipe], image_dir: Path) -> None:
     image_dir.mkdir(parents=True, exist_ok=True)
     for index, recipe in enumerate(recipes, start=1):
         c1, c2 = slug_color(recipe.category)
-        title = html.escape(recipe.title[:12])
         category = html.escape(recipe.category)
+        scene = cover_scene(recipe)
+        title = title_svg(recipe.title)
+        badges = ingredient_badges(recipe)
         svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
   <defs>
     <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
@@ -281,15 +471,13 @@ def write_cover_svgs(recipes: list[SeedRecipe], image_dir: Path) -> None:
   <rect x="0" y="0" width="960" height="540" fill="url(#bg)" opacity=".92"/>
   <circle cx="178" cy="118" r="72" fill="#fff" opacity=".22"/>
   <circle cx="790" cy="92" r="110" fill="#fff" opacity=".16"/>
-  <ellipse cx="480" cy="310" rx="280" ry="128" fill="#fff" opacity=".42" filter="url(#shadow)"/>
-  <ellipse cx="480" cy="300" rx="230" ry="92" fill="#fff8ea" opacity=".88"/>
-  <circle cx="395" cy="282" r="56" fill="#ffe066"/>
-  <circle cx="485" cy="286" r="64" fill="#ff6b35"/>
-  <circle cx="558" cy="326" r="46" fill="#69db7c"/>
-  <text x="480" y="292" text-anchor="middle" font-size="56" font-weight="800" fill="#ffffff"
-        font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif">{title}</text>
-  <text x="480" y="364" text-anchor="middle" font-size="28" font-weight="700" fill="#fff7ef"
-        font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif">{category} · 食光菜谱</text>
+  <rect x="74" y="60" width="812" height="420" rx="34" fill="#fffaf0" opacity=".76" filter="url(#shadow)"/>
+{badges}
+{scene}
+  <rect x="236" y="188" width="488" height="154" rx="32" fill="#fffaf0" opacity=".86"/>
+{title}
+  <text x="480" y="438" text-anchor="middle" font-size="28" font-weight="800" fill="#fff7ef"
+        font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif">{category} · 微菜谱</text>
 </svg>
 """
         (image_dir / f"yunyoujun-{index:03d}.svg").write_text(svg, encoding="utf-8")
@@ -483,7 +671,7 @@ def execute_with_pymysql(sql: str, args: argparse.Namespace) -> None:
 
 def parse_args() -> argparse.Namespace:
     root = Path(__file__).resolve().parents[1]
-    parser = argparse.ArgumentParser(description="Import YunYouJun/cook demo recipes into 食光菜谱.")
+    parser = argparse.ArgumentParser(description="Import YunYouJun/cook demo recipes into 微菜谱.")
     parser.add_argument("--source-csv", default=str(root.parent / "tools" / "yunyoujun-cook" / "app" / "data" / "recipe.csv"))
     parser.add_argument("--out-sql", default=str(root / "outputs" / "seed" / "yunyoujun_seed.sql"))
     parser.add_argument("--image-dir", default=str(root / "src" / "main" / "resources" / "static" / "seed-images"))
@@ -499,6 +687,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     source = load_source_csv(Path(args.source_csv))
+    random.seed(20260530)
     recipes = make_seed_recipes(source)
     if len(recipes) < TARGET_COUNT:
         raise SystemExit(f"Only generated {len(recipes)} recipes; expected {TARGET_COUNT}.")
