@@ -1,0 +1,20 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#FFF7ED'
+    primaryBorderColor: '#FB923C'
+    primaryTextColor: '#2F241F'
+    lineColor: '#84A98C'
+---
+flowchart LR
+  A["需求分析"] --> B["数据库设计"]
+  B --> C["接口设计"]
+  C --> D["后端开发"]
+  D --> E["前端开发"]
+  E --> F["联调测试"]
+  F --> G["答辩汇报"]
+  B -. 表结构反哺 .-> C
+  F -. 问题修正 .-> D
+  F -. 体验优化 .-> E

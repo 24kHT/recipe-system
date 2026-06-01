@@ -1,0 +1,39 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#FFF7ED'
+    primaryBorderColor: '#F97316'
+    primaryTextColor: '#2F241F'
+    lineColor: '#6B8F71'
+    clusterBkg: '#FFFBEB'
+    clusterBorder: '#FED7AA'
+---
+flowchart TB
+  User["游客 / 普通用户 / 管理员"] --> Browser["浏览器访问系统"]
+  Browser --> FrontShell["Vue 3 + Vite 前端应用"]
+
+  subgraph F["前端层"]
+    Router["Vue Router\n页面路由与守卫"]
+    Pinia["Pinia\n用户状态与角色"]
+    Element["Element Plus\n表单、表格、分页、提示"]
+    Axios["Axios / api 封装\n统一请求与 Token"]
+    Router --> Element
+    Pinia --> Axios
+    Element --> Axios
+  end
+
+  FrontShell --> Router
+  Axios -->|/api + JSON + Bearer Token| Controller["REST Controller\n接口入口"]
+
+  subgraph B["后端层：Spring Boot 3.3.7"]
+    Controller --> Interceptor["JWT 拦截器\n身份校验"]
+    Interceptor --> Service["Service 业务层\n发布、收藏、评论、管理"]
+    Service --> Mapper["MyBatis-Plus Mapper\n数据访问"]
+    Exception["统一异常处理"] --> Controller
+    Result["Result / PageResult\n统一响应"] --> Controller
+  end
+
+  Mapper --> MySQL[("MySQL 8.4\nrecipe_system")]
+  Service --> Static["菜谱封面 / 静态资源"]

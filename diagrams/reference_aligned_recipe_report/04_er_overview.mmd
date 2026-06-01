@@ -1,0 +1,18 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#F7FCF5'
+    primaryBorderColor: '#6E8F72'
+    lineColor: '#6E8F72'
+---
+erDiagram
+  USER ||--o{ RECIPE : publishes
+  CATEGORY ||--o{ RECIPE : classifies
+  RECIPE ||--o{ RECIPE_INGREDIENT : has
+  RECIPE ||--o{ RECIPE_STEP : has
+  USER ||--o{ FAVORITE : creates
+  RECIPE ||--o{ FAVORITE : collected_by
+  USER ||--o{ COMMENT : writes
+  RECIPE ||--o{ COMMENT : receives

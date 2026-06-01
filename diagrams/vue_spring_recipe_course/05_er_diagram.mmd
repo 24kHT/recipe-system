@@ -1,0 +1,76 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#FFFBEB'
+    primaryBorderColor: '#F97316'
+    primaryTextColor: '#2F241F'
+    lineColor: '#6B8F71'
+---
+erDiagram
+  USER ||--o{ RECIPE : publishes
+  CATEGORY ||--o{ RECIPE : classifies
+  RECIPE ||--o{ RECIPE_INGREDIENT : has
+  RECIPE ||--o{ RECIPE_STEP : has
+  USER ||--o{ FAVORITE : creates
+  RECIPE ||--o{ FAVORITE : collected_by
+  USER ||--o{ COMMENT : writes
+  RECIPE ||--o{ COMMENT : receives
+
+  USER {
+    bigint id PK
+    varchar username
+    varchar password
+    varchar nickname
+    varchar role
+    tinyint status
+    datetime create_time
+    tinyint deleted
+  }
+  CATEGORY {
+    bigint id PK
+    varchar name
+    varchar icon
+    int sort
+    tinyint status
+    tinyint deleted
+  }
+  RECIPE {
+    bigint id PK
+    bigint user_id FK
+    bigint category_id FK
+    varchar title
+    varchar cover_image
+    varchar difficulty
+    int cooking_time
+    int view_count
+    tinyint status
+  }
+  RECIPE_INGREDIENT {
+    bigint id PK
+    bigint recipe_id FK
+    varchar name
+    varchar amount
+    int sort
+  }
+  RECIPE_STEP {
+    bigint id PK
+    bigint recipe_id FK
+    int step_no
+    text content
+    varchar image
+  }
+  FAVORITE {
+    bigint id PK
+    bigint user_id FK
+    bigint recipe_id FK
+    datetime create_time
+  }
+  COMMENT {
+    bigint id PK
+    bigint user_id FK
+    bigint recipe_id FK
+    text content
+    tinyint status
+  }

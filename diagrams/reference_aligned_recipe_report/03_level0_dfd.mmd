@@ -1,0 +1,25 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#F7FCF5'
+    primaryBorderColor: '#6E8F72'
+    secondaryColor: '#EAF4EA'
+    lineColor: '#6E8F72'
+---
+flowchart TB
+  U["用户 / 管理员"] --> P1["P1 认证与权限"]
+  U --> P2["P2 菜谱浏览与搜索"]
+  U --> P3["P3 菜谱发布维护"]
+  U --> P4["P4 收藏与评论互动"]
+  U --> P5["P5 后台管理"]
+  P1 <--> D1[("D1 user")]
+  P2 <--> D2[("D2 recipe / category")]
+  P2 <--> D3[("D3 recipe_ingredient")]
+  P3 <--> D2
+  P3 <--> D4[("D4 recipe_step")]
+  P4 <--> D5[("D5 favorite / comment")]
+  P5 <--> D1
+  P5 <--> D2
+  P5 <--> D5

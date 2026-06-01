@@ -1,0 +1,29 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#F7FCF5'
+    actorBkg: '#EAF4EA'
+    actorBorder: '#6E8F72'
+    signalColor: '#4F6F55'
+    noteBkgColor: '#F7FCF5'
+---
+sequenceDiagram
+  actor User as 用户
+  participant Vue as Vue 页面
+  participant Axios as Axios 封装
+  participant Auth as JWT 拦截器
+  participant Ctrl as Controller
+  participant Service as Service
+  participant DB as MySQL
+  User->>Vue: 点击登录 / 发布 / 收藏 / 评论
+  Vue->>Axios: 组装参数
+  Axios->>Ctrl: /api 请求 + Token
+  Ctrl->>Auth: 校验身份与角色
+  Ctrl->>Service: 调用业务方法
+  Service->>DB: MyBatis-Plus 读写
+  DB-->>Service: 返回数据
+  Service-->>Ctrl: VO / 业务结果
+  Ctrl-->>Vue: Result<T>
+  Vue-->>User: 更新页面状态

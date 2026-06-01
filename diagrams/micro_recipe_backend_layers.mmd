@@ -1,0 +1,38 @@
+flowchart TB
+    subgraph API["接口层 controller"]
+        UserController["UserController<br/>注册 / 登录 / 资料 / 密码"]
+        RecipeController["RecipeController<br/>列表 / 详情 / 发布 / 编辑 / 删除"]
+        CategoryController["CategoryController<br/>分类列表"]
+        FavoriteController["FavoriteController<br/>收藏 / 取消 / 我的收藏"]
+        CommentController["CommentController<br/>评论 / 查询 / 删除"]
+        AdminController["AdminController<br/>统计 / 用户 / 菜谱 / 分类管理"]
+    end
+
+    subgraph Core["业务层 service.impl"]
+        UserService["UserServiceImpl<br/>BCrypt + JWT"]
+        RecipeService["RecipeServiceImpl<br/>菜谱主表 + 食材步骤事务"]
+        FavoriteService["FavoriteServiceImpl<br/>唯一收藏 + 计数刷新"]
+        CommentService["CommentServiceImpl<br/>评论权限 + 计数刷新"]
+        AdminService["AdminServiceImpl<br/>统计与管理"]
+        CategoryService["CategoryServiceImpl<br/>分类维护"]
+    end
+
+    subgraph Persistence["持久层 mapper + entity"]
+        Mapper["User / Recipe / Category<br/>Favorite / Comment / Ingredient / Step Mapper"]
+        Entity["7 类实体映射 7 张核心表"]
+    end
+
+    subgraph CrossCutting["横切能力"]
+        JWT["JwtUtil"]
+        Auth["AuthInterceptor"]
+        Context["UserContext"]
+        Result["Result / PageResult"]
+        Exception["GlobalExceptionHandler"]
+    end
+
+    API --> Core --> Persistence
+    Persistence --> Mapper --> Entity
+    Auth --> Context
+    JWT --> Auth
+    Exception --> Result
+    Auth --> API

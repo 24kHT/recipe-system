@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    actor Admin as 管理员
+    participant Page as Admin.vue
+    participant API as adminApi
+    participant Auth as AuthInterceptor
+    participant AC as AdminController
+    participant AS as AdminServiceImpl
+    participant RS as RecipeServiceImpl
+    participant DB as MySQL
+
+    Admin->>Page: 进入后台管理
+    Page->>API: GET /api/admin/stat + user/list + recipe/list
+    API->>Auth: Bearer token
+    Auth->>Auth: 校验 role == ADMIN
+    Auth->>AC: 放行管理请求
+    AC->>AS: stat() / users() / recipes()
+    AS->>DB: 统计用户、菜谱、分类、评论
+    AS->>RS: 查询所有菜谱 includeDisabled=true
+    RS->>DB: 分页查询 recipe
+    AC-->>Page: 统计卡片与管理表格
+    Admin->>Page: 点击菜谱上下架
+    Page->>API: PUT /api/admin/recipe/{id}/disable
+    API->>AC: 请求到达
+    AC->>RS: toggleStatus(id)
+    RS->>DB: 更新 recipe.status
+    AC-->>Page: Result(200)

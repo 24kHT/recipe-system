@@ -1,0 +1,28 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#FFF7ED'
+    primaryBorderColor: '#FB923C'
+    primaryTextColor: '#2F241F'
+    lineColor: '#84A98C'
+    secondaryColor: '#ECFDF5'
+    tertiaryColor: '#FEF3C7'
+---
+flowchart LR
+  Visitor["游客"] --> Browse["浏览菜谱"]
+  Visitor --> Search["分类 / 关键词搜索"]
+  Visitor --> Detail["查看菜谱详情"]
+  User["普通用户"] --> Register["注册 / 登录"]
+  User --> Publish["发布菜谱"]
+  User --> Favorite["收藏菜谱"]
+  User --> Comment["发表评论"]
+  User --> Profile["维护个人资料"]
+  Admin["管理员"] --> UserMgmt["用户管理"]
+  Admin --> RecipeMgmt["菜谱上下架"]
+  Admin --> CategoryMgmt["分类维护"]
+  Admin --> CommentMgmt["评论管理"]
+  Publish --> Detail
+  Favorite --> Detail
+  Comment --> Detail

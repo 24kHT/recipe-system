@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    actor U as 用户
+    participant V as Vue 页面
+    participant A as Axios 拦截器
+    participant I as AuthInterceptor
+    participant C as RecipeController
+    participant S as RecipeServiceImpl
+    participant M as MyBatis-Plus Mapper
+    participant D as MySQL
+
+    U->>V: 填写菜谱标题、分类、食材、步骤
+    V->>A: POST /api/recipe
+    A->>A: 从 Pinia/localStorage 读取 token
+    A->>I: Authorization: Bearer token
+    I->>I: JwtUtil 解析并写入 UserContext
+    I->>C: 放行请求
+    C->>S: create(RecipeRequest)
+    S->>M: insert recipe 主表
+    M->>D: 写入 recipe
+    S->>M: insert recipe_ingredient / recipe_step
+    M->>D: 写入食材与步骤
+    S->>S: detail(id) 组装 RecipeVO
+    S-->>C: RecipeVO
+    C-->>A: Result(200, data)
+    A-->>V: 返回数据并跳转详情页
+    V-->>U: 展示发布成功的菜谱

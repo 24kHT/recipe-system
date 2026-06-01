@@ -1,0 +1,23 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#ECFDF5'
+    primaryBorderColor: '#84A98C'
+    secondaryColor: '#FFF7ED'
+    lineColor: '#F97316'
+---
+flowchart LR
+  App["App.vue 布局"] --> Home["/ 首页"]
+  App --> Recipes["/recipes 菜谱列表"]
+  App --> Detail["/recipe/:id 详情"]
+  App --> Fridge["/fridge 食材找菜"]
+  App --> Login["/login 登录"]
+  App --> Register["/register 注册"]
+  App --> Publish["/publish 发布菜谱\n需登录"]
+  App --> Profile["/profile 个人中心\n需登录"]
+  App --> Admin["/admin 后台管理\n需管理员"]
+  Publish --> Auth["路由守卫 auth"]
+  Profile --> Auth
+  Admin --> AdminGuard["路由守卫 admin"]

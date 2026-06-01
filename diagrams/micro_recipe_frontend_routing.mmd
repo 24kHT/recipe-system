@@ -1,0 +1,19 @@
+flowchart TD
+    App["App.vue<br/>顶部导航 + RouterView"]
+    App --> Home["/ 首页<br/>推荐 / 最新 / 热门菜谱"]
+    App --> List["/recipes 菜谱列表<br/>分页 / 关键词 / 分类筛选"]
+    App --> Fridge["/fridge 冰箱寻菜<br/>食材选择与匹配推荐"]
+    App --> Detail["/recipe/:id 菜谱详情<br/>食材 / 步骤 / 收藏 / 评论"]
+    App --> Login["/login 登录"]
+    App --> Register["/register 注册"]
+    App --> Publish["/publish 发布菜谱<br/>meta.auth"]
+    App --> Profile["/profile 个人中心<br/>我的菜谱 / 我的收藏 / 资料修改"]
+    App --> Admin["/admin 后台管理<br/>meta.auth + meta.admin"]
+
+    Login --> Pinia["Pinia user store<br/>token + user"]
+    Register --> Login
+    Publish --> Guard["路由守卫 beforeEach"]
+    Profile --> Guard
+    Admin --> Guard
+    Guard --> Pinia
+    Pinia --> Request["Axios 请求拦截<br/>Authorization: Bearer token"]

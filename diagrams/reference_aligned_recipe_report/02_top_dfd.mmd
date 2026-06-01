@@ -1,0 +1,16 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#F7FCF5'
+    primaryBorderColor: '#6E8F72'
+    lineColor: '#6E8F72'
+---
+flowchart LR
+  U["用户"] -->|注册登录 / 浏览 / 发布 / 收藏 / 评论| S["菜谱分享与管理系统\nVue + Spring Boot"]
+  A["管理员"] -->|用户管理 / 分类维护 / 菜谱治理| S
+  S -->|菜谱列表 / 详情 / 收藏状态 / 评论列表| U
+  S -->|统计数据 / 管理列表 / 操作结果| A
+  S <-->|读写业务数据| DB[("MySQL\nrecipe_system")]
+  S --> R["静态封面资源"]

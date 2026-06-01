@@ -1,0 +1,38 @@
+flowchart LR
+    subgraph UserSide["用户侧"]
+        Browser["浏览器"]
+        User["普通用户 / 管理员"]
+    end
+
+    subgraph Frontend["前端层 Vue 3 + Vite"]
+        Router["Vue Router 路由守卫"]
+        Pinia["Pinia 用户状态"]
+        Axios["Axios /api 统一请求"]
+        UI["Element Plus 页面组件"]
+    end
+
+    subgraph Backend["后端层 Spring Boot 3.3.7"]
+        Controller["REST Controller"]
+        Interceptor["AuthInterceptor JWT 校验"]
+        Service["Service 业务编排"]
+        Mapper["MyBatis-Plus Mapper"]
+        Exception["统一异常与 Result 返回"]
+    end
+
+    subgraph Data["数据与资源层"]
+        MySQL["MySQL 8.4 recipe_system"]
+        Static["静态菜谱图片 / seed-images"]
+    end
+
+    User --> Browser --> UI
+    UI --> Router
+    UI --> Axios
+    Router --> Pinia
+    Pinia --> Axios
+    Axios -- "Bearer Token + JSON" --> Controller
+    Controller --> Interceptor
+    Interceptor --> Service
+    Service --> Mapper
+    Mapper --> MySQL
+    Service --> Static
+    Exception --> Controller

@@ -1,0 +1,36 @@
+erDiagram
+    USER ||--o{ RECIPE : publishes
+    USER ||--o{ FAVORITE : saves
+    RECIPE ||--o{ FAVORITE : collected_by
+    RECIPE ||--o{ COMMENT : receives
+    USER ||--o{ COMMENT : writes
+
+    USER {
+        bigint id PK
+        string username
+        string nickname
+        string role
+    }
+
+    RECIPE {
+        bigint id PK
+        bigint user_id FK
+        string title
+        string category
+        datetime created_at
+    }
+
+    FAVORITE {
+        bigint id PK
+        bigint user_id FK
+        bigint recipe_id FK
+        datetime created_at
+    }
+
+    COMMENT {
+        bigint id PK
+        bigint user_id FK
+        bigint recipe_id FK
+        string content
+        datetime created_at
+    }

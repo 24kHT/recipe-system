@@ -1,0 +1,32 @@
+{
+  "name": "create",
+  "version": "1.0.0",
+  "description": "> 基于 Vue 3 + Spring Boot 3 + MyBatis-Plus + MySQL 的全栈菜谱管理系统，支持菜谱浏览、发布、收藏和评论功能。",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "diagram:er": "mmdc -p scripts/mermaid-puppeteer-config.json -i diagrams/test_er.mmd -o assets/test_er.png -b transparent -w 1400",
+    "diagram:architecture": "mmdc -p scripts/mermaid-puppeteer-config.json -i diagrams/test_architecture.mmd -o assets/test_architecture.png -b transparent -w 1600",
+    "plot:test": ".venv\\Scripts\\python scripts/test_science_plot.py",
+    "ppt:test": "node scripts/test_generate_ppt.js",
+    "ppt:toolchain-test": "npm run diagram:er && npm run diagram:architecture && npm run plot:test && npm run ppt:test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/24kHT/recipe-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/24kHT/recipe-system/issues"
+  },
+  "homepage": "https://github.com/24kHT/recipe-system#readme",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.15.0",
+    "pptxgenjs": "^4.0.1"
+  }
+}

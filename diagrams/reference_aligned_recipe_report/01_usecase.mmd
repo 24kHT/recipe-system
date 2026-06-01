@@ -1,0 +1,24 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#F7FCF5'
+    primaryBorderColor: '#6E8F72'
+    primaryTextColor: '#1F2E25'
+    lineColor: '#6E8F72'
+    secondaryColor: '#EAF4EA'
+---
+flowchart LR
+  A["游客"] --> A1["浏览菜谱"]
+  A --> A2["搜索 / 分类筛选"]
+  A --> A3["查看详情与评论"]
+  B["普通用户"] --> B1["注册登录"]
+  B --> B2["发布菜谱"]
+  B --> B3["收藏菜谱"]
+  B --> B4["发表评论"]
+  B --> B5["冰箱寻菜"]
+  C["管理员"] --> C1["用户启停"]
+  C --> C2["菜谱上下架"]
+  C --> C3["分类维护"]
+  C --> C4["评论治理"]

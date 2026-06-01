@@ -1,0 +1,23 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#FFFBEB'
+    primaryBorderColor: '#F59E0B'
+    secondaryColor: '#ECFDF5'
+    lineColor: '#6B8F71'
+---
+flowchart TD
+  Start["进入发布页"] --> Login{"是否已登录"}
+  Login -- 否 --> ToLogin["跳转登录页"]
+  ToLogin --> Start
+  Login -- 是 --> Form["填写标题、分类、封面、简介"]
+  Form --> Ingredients["维护食材与用量"]
+  Ingredients --> Steps["维护制作步骤"]
+  Steps --> Validate{"表单校验通过"}
+  Validate -- 否 --> Fix["提示并修改"]
+  Fix --> Form
+  Validate -- 是 --> Submit["提交 POST /api/recipe"]
+  Submit --> Save["后端保存 recipe、ingredient、step"]
+  Save --> Detail["跳转详情页 / 我的菜谱"]

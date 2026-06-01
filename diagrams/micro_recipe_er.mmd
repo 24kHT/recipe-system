@@ -1,0 +1,79 @@
+erDiagram
+    USER ||--o{ RECIPE : publishes
+    CATEGORY ||--o{ RECIPE : classifies
+    RECIPE ||--o{ RECIPE_INGREDIENT : contains
+    RECIPE ||--o{ RECIPE_STEP : has
+    USER ||--o{ FAVORITE : creates
+    RECIPE ||--o{ FAVORITE : collected
+    USER ||--o{ COMMENT : writes
+    RECIPE ||--o{ COMMENT : receives
+
+    USER {
+        BIGINT id PK
+        VARCHAR username UK
+        VARCHAR password
+        VARCHAR nickname
+        VARCHAR role
+        TINYINT status
+        TINYINT deleted
+    }
+
+    CATEGORY {
+        BIGINT id PK
+        VARCHAR name UK
+        VARCHAR icon
+        INT sort
+        TINYINT status
+        TINYINT deleted
+    }
+
+    RECIPE {
+        BIGINT id PK
+        BIGINT user_id FK
+        BIGINT category_id FK
+        VARCHAR title
+        VARCHAR cover_image
+        VARCHAR difficulty
+        INT cooking_time
+        INT view_count
+        INT favorite_count
+        INT like_count
+        INT comment_count
+        TINYINT status
+        TINYINT deleted
+    }
+
+    RECIPE_INGREDIENT {
+        BIGINT id PK
+        BIGINT recipe_id FK
+        VARCHAR name
+        VARCHAR amount
+        INT sort
+        TINYINT deleted
+    }
+
+    RECIPE_STEP {
+        BIGINT id PK
+        BIGINT recipe_id FK
+        INT step_no
+        TEXT content
+        VARCHAR image
+        TINYINT deleted
+    }
+
+    FAVORITE {
+        BIGINT id PK
+        BIGINT user_id FK
+        BIGINT recipe_id FK
+        DATETIME create_time
+        TINYINT deleted
+    }
+
+    COMMENT {
+        BIGINT id PK
+        BIGINT user_id FK
+        BIGINT recipe_id FK
+        TEXT content
+        TINYINT status
+        TINYINT deleted
+    }

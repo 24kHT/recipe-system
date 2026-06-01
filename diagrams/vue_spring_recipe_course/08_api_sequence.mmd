@@ -1,0 +1,33 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#FFF7ED'
+    actorBkg: '#ECFDF5'
+    actorBorder: '#84A98C'
+    signalColor: '#6B8F71'
+    noteBkgColor: '#FFFBEB'
+---
+sequenceDiagram
+  actor U as 用户
+  participant V as Vue 前端
+  participant A as Axios 封装
+  participant C as Spring Boot Controller
+  participant I as JWT 拦截器
+  participant S as Service
+  participant M as MyBatis Mapper
+  participant DB as MySQL
+  U->>V: 操作页面（登录/发布/收藏/评论）
+  V->>A: 组装请求参数
+  A->>C: /api 请求 + JSON
+  C->>I: 需要登录时校验 Bearer Token
+  I-->>C: 用户身份 / 权限结果
+  C->>S: 调用业务方法
+  S->>M: 数据读写
+  M->>DB: SQL 执行
+  DB-->>M: 数据结果
+  M-->>S: Entity
+  S-->>C: VO / 业务结果
+  C-->>A: Result<T>
+  A-->>V: 更新页面状态

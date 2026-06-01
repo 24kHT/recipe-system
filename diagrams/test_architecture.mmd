@@ -1,0 +1,27 @@
+flowchart LR
+    subgraph Client["Client Layer"]
+        Browser["Browser"]
+        Vue["Vue 3 + Vite"]
+        ElementPlus["Element Plus UI"]
+    end
+
+    subgraph Server["Spring Boot Backend"]
+        Controller["Controller"]
+        Service["Service"]
+        Mapper["MyBatis-Plus Mapper"]
+        Security["JWT Auth Filter"]
+    end
+
+    subgraph Data["Data Layer"]
+        MySQL["MySQL 8.4"]
+        StaticAssets["Static Recipe Images"]
+    end
+
+    Browser --> Vue
+    Vue --> ElementPlus
+    Vue -- "REST API / JSON" --> Controller
+    Controller --> Security
+    Controller --> Service
+    Service --> Mapper
+    Mapper --> MySQL
+    Service --> StaticAssets

@@ -1,0 +1,20 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontFamily: Microsoft YaHei, SimHei, Arial
+    primaryColor: '#FFF7ED'
+    primaryBorderColor: '#F97316'
+    secondaryColor: '#ECFDF5'
+    lineColor: '#6B8F71'
+---
+flowchart TB
+  Request["HTTP 请求"] --> Controller["Controller\n参数校验 / 路由分发"]
+  Controller --> DTO["DTO\nLoginRequest / RecipeRequest"]
+  Controller --> Service["Service\n业务规则 / 权限判断"]
+  Service --> Mapper["Mapper\nMyBatis-Plus CRUD"]
+  Mapper --> Entity["Entity\nuser / recipe / comment"]
+  Entity --> MySQL[("MySQL")]
+  Service --> VO["VO\nLoginVO / RecipeVO / CommentVO"]
+  VO --> Result["Result / PageResult 统一返回"]
+  Result --> Response["JSON 响应"]
